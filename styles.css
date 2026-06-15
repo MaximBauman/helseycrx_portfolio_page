@@ -1076,13 +1076,11 @@ h3 {
 }
 
 .story-slider {
-  position: relative;
   display: none;
-  width: min(100%, 520px);
-  height: var(--mobile-preview-height);
+  width: min(100%, 350px);
   margin: 0 auto;
-  grid-template-rows: minmax(0, 1fr) auto;
-  gap: 12px;
+  grid-template-rows: auto auto;
+  gap: 14px;
 }
 
 .modal-preview.is-gallery .story-slider:not([hidden]) {
@@ -1090,6 +1088,8 @@ h3 {
 }
 
 .story-slider__viewport {
+  aspect-ratio: 1177 / 2560;
+  width: 100%;
   overflow: hidden;
   border: 1px solid rgba(5, 5, 5, 0.78);
   border-radius: 34px;
@@ -1117,20 +1117,22 @@ h3 {
   object-fit: contain;
 }
 
+.story-slider__controls {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
 .story-slider__nav {
-  position: absolute;
-  top: 50%;
-  z-index: 2;
   min-height: 40px;
   padding: 0 14px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
+  border: 1px solid rgba(5, 5, 5, 0.24);
   border-radius: var(--pill-radius);
-  background: rgba(5, 5, 5, 0.82);
+  background: #050505;
   color: #fff;
   cursor: pointer;
-  transform: translateY(-50%);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   transition:
     transform 360ms var(--ease),
     background 360ms var(--ease),
@@ -1140,25 +1142,18 @@ h3 {
 .story-slider__nav:hover {
   background: var(--acid);
   color: #050505;
-  transform: translateY(-50%) scale(1.04);
-}
-
-.story-slider__nav--prev {
-  left: 12px;
-}
-
-.story-slider__nav--next {
-  right: 12px;
+  transform: translateY(-2px);
 }
 
 .story-slider__dots {
   display: flex;
   justify-content: center;
+  min-width: 0;
   gap: 8px;
 }
 
 .story-slider__dots button {
-  width: 28px;
+  width: 22px;
   height: 8px;
   padding: 0;
   border: 0;
@@ -1171,7 +1166,7 @@ h3 {
 }
 
 .story-slider__dots button.is-active {
-  width: 46px;
+  width: 36px;
   background: #050505;
 }
 
@@ -1710,20 +1705,13 @@ h3 {
   }
 
   .story-slider {
-    width: min(100%, 360px);
+    width: min(100%, 300px);
   }
 
   .story-slider__nav {
-    top: auto;
-    bottom: 46px;
     min-height: 34px;
     padding: 0 12px;
     font-size: 13px;
-    transform: none;
-  }
-
-  .story-slider__nav:hover {
-    transform: none;
   }
 
   .modal-preview .viewport-toggle [data-viewport="desktop"] {
