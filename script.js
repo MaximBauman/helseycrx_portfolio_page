@@ -317,6 +317,7 @@ const modalPreview = document.querySelector("#modalPreview");
 const caseFrame = document.querySelector("#caseFrame");
 const mediaImage = document.querySelector("#mediaImage");
 const mediaVideo = document.querySelector("#mediaVideo");
+const mediaPlay = document.querySelector("#mediaPlay");
 const storySlider = document.querySelector("#storySlider");
 const storyTrack = document.querySelector("#storyTrack");
 const storyDots = document.querySelector("#storyDots");
@@ -465,6 +466,7 @@ function hydrateModal(index) {
   caseFrame.removeAttribute("src");
   mediaImage.hidden = true;
   mediaVideo.hidden = true;
+  mediaPlay.hidden = true;
   mediaVideo.controls = false;
   mediaVideo.pause();
   mediaVideo.removeAttribute("src");
@@ -492,6 +494,7 @@ function hydrateModal(index) {
   if (previewMode === "video") {
     modalPreview.classList.add("is-media", "is-video");
     mediaVideo.hidden = false;
+    mediaPlay.hidden = false;
     mediaVideo.controls = true;
     mediaVideo.src = item.media;
     mediaVideo.poster = item.image;
@@ -549,6 +552,7 @@ function closeCase() {
       mediaVideo.removeAttribute("src");
       mediaVideo.controls = false;
       mediaVideo.hidden = true;
+      mediaPlay.hidden = true;
       mediaVideo.load();
     }
   }, reduceMotion ? 1 : 320);
@@ -626,6 +630,26 @@ storyDots.addEventListener("click", (event) => {
   const button = event.target.closest("[data-gallery-index]");
   if (!button) return;
   setGallerySlide(Number(button.dataset.galleryIndex));
+});
+
+mediaPlay.addEventListener("click", () => {
+  mediaVideo.play().catch(() => {
+    mediaPlay.hidden = false;
+  });
+});
+
+mediaVideo.addEventListener("play", () => {
+  mediaPlay.hidden = true;
+});
+
+mediaVideo.addEventListener("pause", () => {
+  if (!mediaVideo.hidden && !mediaVideo.ended) {
+    mediaPlay.hidden = false;
+  }
+});
+
+mediaVideo.addEventListener("ended", () => {
+  mediaPlay.hidden = false;
 });
 
 caseModal.addEventListener("click", (event) => {

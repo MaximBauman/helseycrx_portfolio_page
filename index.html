@@ -230,7 +230,10 @@
           </div>
           <div class="media-preview" id="mediaPreview">
             <img id="mediaImage" src="assets/pds.webp" alt="" />
-            <video id="mediaVideo" controls muted playsinline hidden></video>
+            <video id="mediaVideo" controls muted playsinline preload="metadata" hidden></video>
+            <button class="media-play" id="mediaPlay" type="button" hidden>
+              Смотреть видео
+            </button>
           </div>
           <div class="story-slider" id="storySlider" hidden>
             <div class="story-slider__viewport">
