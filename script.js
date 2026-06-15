@@ -101,7 +101,8 @@ const cases = [
     type: "Нестандартный формат",
     metric: "ПМЭФ",
     image: "assets/lenta-business.webp",
-    preview: "image",
+    media: "videos/ФСК_Амбер_Сити.mov",
+    preview: "video",
     summary: "Лента Бизнеса на Lenta.ru с брендированным тумблером и отбором новостей по категориям.",
     goal: "Встроить бренд в деловой инфоповод ПМЭФ и удержать внимание аудитории внутри новостного контекста.",
     solution: "Запустили формат с брендированным переключателем и тематической фильтрацией, чтобы размещение работало как сервисный слой.",
@@ -137,7 +138,8 @@ const cases = [
     type: "Интерактивный виджет",
     metric: "12 апреля",
     image: "assets/netology.webp",
-    preview: "image",
+    media: "videos/Нетология.mov",
+    preview: "video",
     summary: "Виджет ко Дню космонавтики по сети Rambler&Co с вовлекающей механикой вокруг образовательных курсов.",
     goal: "Связать образовательный продукт с инфоповодом и сделать коммуникацию заметной в потоке редакционного контента.",
     solution: "Запустили интерактивный виджет с космической метафорой, быстрым действием и переходом к релевантному курсу.",
@@ -149,7 +151,13 @@ const cases = [
     type: "Stories integration",
     metric: "ecosystem content",
     image: "assets/samokat.webp",
-    preview: "mobile-image",
+    preview: "gallery",
+    gallery: [
+      "assets/gigachat-01.jpg",
+      "assets/gigachat-02.jpg",
+      "assets/gigachat-03.jpg",
+      "assets/gigachat-04.jpg",
+    ],
     summary: "Интеграции в раздел сторис Самоката для ГигаЧата и других экосистемных коммуникаций.",
     goal: "Попасть в привычный мобильный сценарий пользователя и сделать продуктовую коммуникацию быстрой, заметной и нативной.",
     solution: "Адаптировали сообщение под stories-формат: короткий визуальный сценарий, моментальный контакт и логика, понятная внутри e-com сервиса.",
@@ -309,14 +317,20 @@ const modalPreview = document.querySelector("#modalPreview");
 const caseFrame = document.querySelector("#caseFrame");
 const mediaImage = document.querySelector("#mediaImage");
 const mediaVideo = document.querySelector("#mediaVideo");
+const storySlider = document.querySelector("#storySlider");
+const storyTrack = document.querySelector("#storyTrack");
+const storyDots = document.querySelector("#storyDots");
 const projectList = document.querySelector("#projectList");
 const fallbackText = document.querySelector("#fallbackText");
 const fallbackLink = document.querySelector("#fallbackLink");
 const browserFrame = document.querySelector("#browserFrame");
 const viewportButtons = document.querySelectorAll("[data-viewport]");
+const galleryButtons = document.querySelectorAll("[data-gallery-direction]");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 let activeCase = 0;
+let activeGalleryIndex = 0;
+let activeGalleryImages = [];
 let pointerFrame = null;
 
 function setSection(sectionId) {
@@ -394,11 +408,45 @@ function renderCollections() {
     .join("");
 }
 
+function setGallerySlide(index) {
+  if (!activeGalleryImages.length) return;
+  activeGalleryIndex = (index + activeGalleryImages.length) % activeGalleryImages.length;
+  storyTrack.style.transform = `translateX(-${activeGalleryIndex * 100}%)`;
+  storyDots.querySelectorAll("button").forEach((button) => {
+    const isActive = Number(button.dataset.galleryIndex) === activeGalleryIndex;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-current", isActive ? "true" : "false");
+  });
+}
+
+function renderStoryGallery(images, title) {
+  activeGalleryImages = images;
+  activeGalleryIndex = 0;
+  storyTrack.innerHTML = images
+    .map(
+      (src, index) => `
+        <div class="story-slider__slide">
+          <img src="${src}" alt="${title}: экран ${index + 1}" loading="lazy" />
+        </div>
+      `,
+    )
+    .join("");
+  storyDots.innerHTML = images
+    .map(
+      (_, index) => `
+        <button type="button" data-gallery-index="${index}" aria-label="Показать экран ${index + 1}"></button>
+      `,
+    )
+    .join("");
+  storySlider.hidden = false;
+  setGallerySlide(0);
+}
+
 function hydrateModal(index) {
   activeCase = index;
   const item = cases[index];
   const previewMode = item.preview || (item.link ? "iframe" : "image");
-  const previewTarget = item.link || item.media || item.image;
+  const previewTarget = item.link || item.media || item.gallery?.[0] || item.image;
 
   modalIndex.textContent = String(index + 1).padStart(2, "0");
   modalType.textContent = item.type;
@@ -421,6 +469,11 @@ function hydrateModal(index) {
   mediaVideo.pause();
   mediaVideo.removeAttribute("src");
   mediaVideo.load();
+  storySlider.hidden = true;
+  storyTrack.innerHTML = "";
+  storyDots.innerHTML = "";
+  activeGalleryImages = [];
+  activeGalleryIndex = 0;
   projectList.innerHTML = "";
 
   if (previewMode === "iframe") {
@@ -443,6 +496,11 @@ function hydrateModal(index) {
     mediaVideo.src = item.media;
     mediaVideo.poster = item.image;
     mediaVideo.load();
+  }
+
+  if (previewMode === "gallery") {
+    modalPreview.classList.add("is-gallery");
+    renderStoryGallery(item.gallery || [item.image], item.title);
   }
 
   if (previewMode === "links") {
@@ -555,6 +613,19 @@ caseGallery.addEventListener("click", (event) => {
 
 viewportButtons.forEach((button) => {
   button.addEventListener("click", () => setViewport(button.dataset.viewport));
+});
+
+galleryButtons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    setGallerySlide(activeGalleryIndex + Number(button.dataset.galleryDirection));
+  });
+});
+
+storyDots.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-gallery-index]");
+  if (!button) return;
+  setGallerySlide(Number(button.dataset.galleryIndex));
 });
 
 caseModal.addEventListener("click", (event) => {

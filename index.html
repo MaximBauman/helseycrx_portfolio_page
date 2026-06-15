@@ -232,6 +232,28 @@
             <img id="mediaImage" src="assets/pds.webp" alt="" />
             <video id="mediaVideo" controls muted playsinline hidden></video>
           </div>
+          <div class="story-slider" id="storySlider" hidden>
+            <div class="story-slider__viewport">
+              <div class="story-slider__track" id="storyTrack"></div>
+            </div>
+            <button
+              class="story-slider__nav story-slider__nav--prev"
+              type="button"
+              data-gallery-direction="-1"
+              aria-label="Предыдущий экран"
+            >
+              Назад
+            </button>
+            <button
+              class="story-slider__nav story-slider__nav--next"
+              type="button"
+              data-gallery-direction="1"
+              aria-label="Следующий экран"
+            >
+              Вперед
+            </button>
+            <div class="story-slider__dots" id="storyDots" aria-label="Навигация по экранам"></div>
+          </div>
           <div class="project-list" id="projectList" aria-label="Ссылки на проекты"></div>
         </div>
       </div>

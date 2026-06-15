@@ -1075,6 +1075,106 @@ h3 {
   padding-top: 12px;
 }
 
+.story-slider {
+  position: relative;
+  display: none;
+  width: min(100%, 520px);
+  height: var(--mobile-preview-height);
+  margin: 0 auto;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 12px;
+}
+
+.modal-preview.is-gallery .story-slider:not([hidden]) {
+  display: grid;
+}
+
+.story-slider__viewport {
+  overflow: hidden;
+  border: 1px solid rgba(5, 5, 5, 0.78);
+  border-radius: 34px;
+  background: #050505;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.24);
+}
+
+.story-slider__track {
+  display: flex;
+  height: 100%;
+  transition: transform 520ms var(--ease);
+}
+
+.story-slider__slide {
+  display: grid;
+  flex: 0 0 100%;
+  place-items: center;
+  min-width: 0;
+  background: #050505;
+}
+
+.story-slider__slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.story-slider__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: var(--pill-radius);
+  background: rgba(5, 5, 5, 0.82);
+  color: #fff;
+  cursor: pointer;
+  transform: translateY(-50%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    transform 360ms var(--ease),
+    background 360ms var(--ease),
+    color 360ms var(--ease);
+}
+
+.story-slider__nav:hover {
+  background: var(--acid);
+  color: #050505;
+  transform: translateY(-50%) scale(1.04);
+}
+
+.story-slider__nav--prev {
+  left: 12px;
+}
+
+.story-slider__nav--next {
+  right: 12px;
+}
+
+.story-slider__dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.story-slider__dots button {
+  width: 28px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--pill-radius);
+  background: rgba(5, 5, 5, 0.2);
+  cursor: pointer;
+  transition:
+    width 360ms var(--ease),
+    background 360ms var(--ease);
+}
+
+.story-slider__dots button.is-active {
+  width: 46px;
+  background: #050505;
+}
+
 .viewport-toggle {
   display: inline-flex;
   gap: 4px;
@@ -1603,6 +1703,27 @@ h3 {
 
   .modal-preview.is-video {
     --preview-height: 520px;
+  }
+
+  .modal-preview.is-gallery {
+    --mobile-preview-height: 650px;
+  }
+
+  .story-slider {
+    width: min(100%, 360px);
+  }
+
+  .story-slider__nav {
+    top: auto;
+    bottom: 46px;
+    min-height: 34px;
+    padding: 0 12px;
+    font-size: 13px;
+    transform: none;
+  }
+
+  .story-slider__nav:hover {
+    transform: none;
   }
 
   .modal-preview .viewport-toggle [data-viewport="desktop"] {
