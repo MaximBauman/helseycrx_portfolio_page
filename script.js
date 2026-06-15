@@ -473,6 +473,7 @@ function setViewport(mode) {
 function openCase(index) {
   hydrateModal(index);
   setViewport(window.matchMedia("(max-width: 760px)").matches ? "mobile" : "desktop");
+  caseModal.scrollTop = 0;
   document.body.classList.add("modal-open");
   caseModal.classList.add("is-open");
   caseModal.setAttribute("aria-hidden", "false");
